@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 @Entity
 public class Producto implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
     @NotEmpty

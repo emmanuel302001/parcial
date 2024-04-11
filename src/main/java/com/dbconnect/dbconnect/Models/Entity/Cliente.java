@@ -18,10 +18,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 @Entity
-public class Cliente implements Serializable {
+public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
     @NotEmpty
@@ -83,9 +83,9 @@ public class Cliente implements Serializable {
         CreateAt = createAt;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
+    // public static long getSerialversionuid() {
+    //     return serialVersionUID;
+    // }
 
-    private static final long serialVersionUID = 1L;
+    // private static final long serialVersionUID = 1L;
 }
