@@ -7,21 +7,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.Column;
 
 @Entity
 public class Producto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Long Id;
 
     @NotEmpty
+    @Column(name = "Nombre")
     private String Nombre;
 
     @NotEmpty
+    @Column(name = "Descripcion")
     private String Descripcion;
 
+    @Column(name = "ValorUni")
     private Long ValorUni;
 
+    @Column(name = "Stock")
     private Long Stock;
 
     public Long getId() {

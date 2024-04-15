@@ -22,15 +22,19 @@ public class Cliente implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Long Id;
 
     @NotEmpty
+    @Column(name = "Nombre")
     private String Nombre;
     @NotEmpty
     @Size(min = 4, max = 15)
+    @Column(name = "Apellido")
     private String Apellido;
     @NotEmpty
     @Email
+    @Column(name = "Email")
     private String Email;
 
     @Column(name = "create_at")
