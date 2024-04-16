@@ -36,6 +36,18 @@ public class Producto implements Serializable {
     @Column(name = "Stock")
     private Long Stock;
 
+    public Producto(Long id, String nombre, String descripcion, Long valorUni, Long stock) {
+        super();
+        this.Id = id;
+        this.Nombre = nombre;
+        this.Descripcion = descripcion;
+        this.ValorUni = valorUni;
+        this.Stock = stock;
+    }
+
+    public Producto() {
+    }
+
     public Long getId() {
         return Id;
     }

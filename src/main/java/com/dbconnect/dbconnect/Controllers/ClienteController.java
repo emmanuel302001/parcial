@@ -20,13 +20,7 @@ public class ClienteController {
 
     @Autowired
     private IClienteDao IClienteDao;
-
-    @GetMapping({"/home","/"})
-    public String home(Model model) {
-        return "/home";
-    }
     
-
     @GetMapping("/cliente/listar")
     public String Listar(Model model) {
         model.addAttribute("title", "Listado de Clientes");

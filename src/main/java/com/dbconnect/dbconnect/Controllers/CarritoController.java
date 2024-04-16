@@ -1,5 +1,9 @@
 package com.dbconnect.dbconnect.Controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +24,6 @@ import com.dbconnect.dbconnect.Models.Entity.Producto;
 import com.dbconnect.dbconnect.Models.Entity.factura;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 @Controller
 public class CarritoController {
 
@@ -33,6 +35,11 @@ public class CarritoController {
     private ICarritoDao ICarritoDao;
 
     public String cliente;
+
+    List<Detalles> detalles = new ArrayList<Detalles>();
+
+    factura factura = new factura();
+    Encabezado encabezado = new Encabezado();
 
     @GetMapping("/carrito/listar")
     public String ListarCliente(Model model) {
@@ -60,33 +67,94 @@ public class CarritoController {
 
         return "/carrito/listar";
     }
-    
+
     @PostMapping("/carrito/form")
     public String saveproduct(@ModelAttribute("carrito") Carrito carrito) {
-            // No tiene validación si la cantidad supera el stock
-        System.out.println("debug: " + carrito.getIdCliente() + " " + carrito.getIdProducto() + " " + carrito.getCantidad());
-        ICarritoDao.add( carrito);
+        // No tiene validación si la cantidad supera el stock
+        System.out.println(
+                "debug: " + carrito.getIdCliente() + " " + carrito.getIdProducto() + " " + carrito.getCantidad());
+        ICarritoDao.add(carrito);
         this.cliente = String.valueOf(carrito.getIdCliente());
-        return "redirect:/carrito/listar/"+carrito.getIdCliente()+"";
+        return "redirect:/carrito/listar/" + carrito.getIdCliente() + "";
     }
 
     @GetMapping("/factura/eliminar/{id}/{idCliente}")
     public String delete(@PathVariable long id, @PathVariable long idCliente) {
-       // Long idLong = Long.parseLong(id);
-       System.out.println("debug: " + id + " " + idCliente);
-       ICarritoDao.delete(id);
-        return "redirect:/carrito/listar/"+idCliente+"";
+        // Long idLong = Long.parseLong(id);
+        System.out.println("debug: " + id + " " + idCliente);
+        ICarritoDao.delete(id);
+        return "redirect:/carrito/listar/" + idCliente + "";
     }
 
-    @GetMapping({"/descuento"})
-    public String validateDiscount(@RequestParam(name = "descuento", required = false , defaultValue = "0") int descuento, 
-    @RequestParam(name = "idEncabezado", required = false , defaultValue = "0") Long idEncabezado
-    , @RequestParam(name = "idCliente", required = false , defaultValue = "0") Long idCliente){
-        System.out.println("descuento: " + descuento + " "+ idEncabezado);
+    @GetMapping({ "/descuento" })
+    public String validateDiscount(
+            @RequestParam(name = "descuento", required = false, defaultValue = "0") int descuento,
+            @RequestParam(name = "idEncabezado", required = false, defaultValue = "0") Long idEncabezado,
+            @RequestParam(name = "idCliente", required = false, defaultValue = "0") Long idCliente) {
+        System.out.println("descuento: " + descuento + " " + idEncabezado);
         ICarritoDao.descuento(descuento, idEncabezado);
-       return "redirect:/carrito/listar/"+idCliente+"";
+        return "redirect:/carrito/listar/" + idCliente + "";
     }
-    
-    
-    
+
+    @PostMapping("/cart")
+    public String addCart(@RequestParam Long id, @RequestParam Integer cantidad, Model model) {
+        factura factura = new factura();
+        Detalles detalleOrden = new Detalles();
+        Encabezado encabezado = new Encabezado();
+        Producto producto = new Producto();
+        double sumaTotal = 0;
+
+        Optional<Producto> productoOptional = Optional.ofNullable(IProductoDao.findById(id));
+        producto = productoOptional.get();
+
+        detalleOrden.setCantidad(cantidad);
+        detalleOrden.setValor(producto.getValorUni() * cantidad);
+        encabezado.setTotal(producto.getValorUni() * cantidad);
+        detalleOrden.setProducto(producto);
+
+        factura.setEncabezado(encabezado);
+        factura.setDetalle(detalles);
+
+        // validar que le producto no se añada 2 veces
+        Long idProducto = producto.getId();
+        boolean ingresado = detalles.stream().anyMatch(p -> p.getProducto().getId() == idProducto);
+
+        if (!ingresado) {
+            detalles.add(detalleOrden);
+        }
+
+        sumaTotal = detalles.stream().mapToDouble(dt -> dt.getValor()).sum();
+
+        encabezado.setTotal(sumaTotal);
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", factura);
+
+        return "carrito/carrito";
+    }
+
+    @GetMapping("/delete/cart/{id}")
+    public String deleteProductoCart(@PathVariable Long id, Model model) {
+
+        // lista nueva de prodcutos
+        List<Detalles> ordenesNueva = new ArrayList<Detalles>();
+
+        for (Detalles detalleOrden : detalles) {
+            if (detalleOrden.getProducto().getId() != id) {
+                ordenesNueva.add(detalleOrden);
+            }
+        }
+
+        // poner la nueva lista con los productos restantes
+        detalles = ordenesNueva;
+
+        double sumaTotal = 0;
+        sumaTotal = detalles.stream().mapToDouble(dt -> dt.getValor()).sum();
+
+        encabezado.setTotal(sumaTotal);
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", encabezado);
+
+        return "carrito/carrito";
+    }
+
 }
