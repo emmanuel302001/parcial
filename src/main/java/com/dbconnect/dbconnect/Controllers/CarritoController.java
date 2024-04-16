@@ -1,6 +1,7 @@
 package com.dbconnect.dbconnect.Controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,8 @@ public class CarritoController {
 
     factura factura = new factura();
     Encabezado encabezado = new Encabezado();
+    Detalles detalleOrden = new Detalles();
+    Cliente clienteOrden = new Cliente();
 
     @GetMapping("/carrito/listar")
     public String ListarCliente(Model model) {
@@ -98,7 +101,6 @@ public class CarritoController {
 
     @PostMapping("/cart")
     public String addCart(@RequestParam Long id, @RequestParam Integer cantidad, Model model) {
-        factura factura = new factura();
         Detalles detalleOrden = new Detalles();
         Encabezado encabezado = new Encabezado();
         Producto producto = new Producto();
@@ -126,6 +128,7 @@ public class CarritoController {
         sumaTotal = detalles.stream().mapToDouble(dt -> dt.getValor()).sum();
 
         encabezado.setTotal(sumaTotal);
+        model.addAttribute("cliente", IClienteDao.findAll());
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", factura);
 
@@ -152,7 +155,26 @@ public class CarritoController {
 
         encabezado.setTotal(sumaTotal);
         model.addAttribute("cart", detalles);
-        model.addAttribute("orden", encabezado);
+        model.addAttribute("orden", factura);
+
+        return "carrito/carrito";
+    }
+
+    @GetMapping("/detalleorden")
+    public String order(Model model) {
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", factura);
+        model.addAttribute("cliente", clienteOrden);
+
+        return "carrito/detalleorden";
+    }
+
+    @GetMapping("/getCart")
+    public String getCart(Model model) {
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", factura);
+        model.addAttribute("cliente", IClienteDao.findAll());
 
         return "carrito/carrito";
     }
