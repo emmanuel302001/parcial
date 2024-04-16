@@ -63,7 +63,12 @@ public class ProductoController {
     }
 
     @PostMapping("/producto/editar")
-    public String edit(Producto producto) {
+    public String edit(@Valid Producto producto, BindingResult result, Model model) {
+
+        if(result.hasErrors()){
+            model.addAttribute("title", "Editar producto");
+            return "/producto/formEditar";
+        }
         IProductoDao.edit(producto);
 
         return "redirect:/producto/listar";

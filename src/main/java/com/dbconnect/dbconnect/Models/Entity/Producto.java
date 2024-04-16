@@ -6,7 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Column;
 
 @Entity
@@ -16,17 +18,21 @@ public class Producto implements Serializable {
     @Column(name = "Id")
     private Long Id;
 
-    @NotEmpty
+    @NotEmpty(message = "El campo no puede estar en vacio")
     @Column(name = "Nombre")
     private String Nombre;
 
-    @NotEmpty
+    @NotEmpty(message = "El campo no puede estar en vacio")
     @Column(name = "Descripcion")
     private String Descripcion;
 
+    @NotNull(message = "Ingrese un valor para el producto")
+    @Min(value = 100, message = "Ingrese un valor mayor a 100")
     @Column(name = "ValorUni")
     private Long ValorUni;
 
+    @NotNull(message = "Ingrese un stock para el producto")
+    @Min(value = 1, message = "El Stock debe ser mayor a 1")
     @Column(name = "Stock")
     private Long Stock;
 
