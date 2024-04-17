@@ -24,6 +24,8 @@ import com.dbconnect.dbconnect.Models.Entity.Encabezado;
 import com.dbconnect.dbconnect.Models.Entity.Producto;
 import com.dbconnect.dbconnect.Models.Entity.factura;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class CarritoController {
@@ -178,5 +180,17 @@ public class CarritoController {
 
         return "carrito/carrito";
     }
+
+    @PostMapping("/carrito/guardaCarrito")
+    public String postMethodName(@ModelAttribute("carrito") Carrito carrito) {
+        System.out.println(
+                "debug: " + carrito);
+        // ICarritoDao.add(carrito);
+        this.cliente = String.valueOf(carrito.getIdCliente());
+        // return "redirect:/carrito/listar/" + carrito.getIdCliente() + "";
+        
+        return "carrito/carrito";
+    }
+    
 
 }
