@@ -16,10 +16,24 @@
 
 <body>
     <header th:replace="~{fragments/header :: navigation}"></header>
-    <main></main>
-    <footer>
-        <!-- place footer here -->
-    </footer>
+    <main>
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4" th:each="producto: ${productos}">
+                <div class="card h-100">
+                    <img class="card-img-top" th:src="@{/images/trolley.png}" style="width: 150px;">
+                    <div class="card-body">
+                        <p class="card-text" th:text="${producto.nombre}"></p>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{'/producto/detalleproducto/' + ${producto.id}}" class="btn btn-success">Ver
+                            producto</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

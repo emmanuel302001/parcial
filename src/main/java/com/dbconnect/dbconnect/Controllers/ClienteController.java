@@ -20,13 +20,7 @@ public class ClienteController {
 
     @Autowired
     private IClienteDao IClienteDao;
-
-    @GetMapping({"/home","/"})
-    public String home(Model model) {
-        return "/home";
-    }
     
-
     @GetMapping("/cliente/listar")
     public String Listar(Model model) {
         model.addAttribute("title", "Listado de Clientes");
@@ -72,7 +66,11 @@ public class ClienteController {
     }
 
     @PostMapping("/cliente/editar")
-    public String edit(Cliente cliente) {
+    public String edit(@Valid Cliente cliente, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("title", "Editar Cliente");
+            return "/cliente/formEditar";
+        }
         IClienteDao.edit(cliente);
 
         return "redirect:/cliente/listar";

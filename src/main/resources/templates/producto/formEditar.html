@@ -26,21 +26,25 @@
                     <input type="text" class="form-control" th:field="*{nombre}" name="nombre" id="nombre"
                         placeholder="" />
                     <label for="nombre">Nombre</label>
+                    <p th:if="${#fields.hasErrors('Nombre')}" th:errorclass="error" th:errors="*{Nombre}" />
                 </div>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" th:field="*{descripcion}" name="descripcion" id="descripcion"
                         placeholder="" />
                     <label for="descripcion">Descripcion</label>
+                    <p th:if="${#fields.hasErrors('Descripcion')}" th:errorclass="error" th:errors="*{Descripcion}" />
                 </div>
                 <div class="form-floating mb-3">
                     <input type="number" class="form-control" th:field="*{stock}" name="stock" id="stock"
                         placeholder="" />
                     <label for="stock">Stock</label>
+                    <p th:if="${#fields.hasErrors('Stock')}" th:errorclass="error" th:errors="*{Stock}" />
                 </div>
                 <div class="form-floating mb-3">
                     <input type="number" class="form-control" th:field="*{valorUni}" name="valorUni" id="valorUni"
                         placeholder="" />
                     <label for="valorUni">Valor Unidad</label>
+                    <p th:if="${#fields.hasErrors('ValorUni')}" th:errorclass="error" th:errors="*{ValorUni}" />
                 </div>
 
                 <button type="submit" class="btn btn-primary">Editar</button>
